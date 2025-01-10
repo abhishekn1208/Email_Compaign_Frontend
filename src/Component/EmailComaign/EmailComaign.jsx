@@ -22,7 +22,7 @@ const EmailComaign = () => {
     const fetchupdatedContent=async(compaignId)=>{
       console.log(compaignId)
       try {
-        const response = await axios.get(`http://localhost:3000/api/${compaignId}`)
+        const response = await axios.get(`https://email-compaign.onrender.com/api/${compaignId}`)
         console.log(response)
         if(response.status===200){
           const compaign = response.data
@@ -63,7 +63,7 @@ useEffect(()=>{
 
         let response;
         if(isEdit){
-          response = await axios.patch(`http://localhost:3000/api/${compaignId}`,data,{
+          response = await axios.patch(`https://email-compaign.onrender.com/api/${compaignId}`,data,{
             headers : {
               Authorization : `Bearer ${token}`
             }

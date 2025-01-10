@@ -32,7 +32,7 @@ const CompaignPage = () => {
     const handleDeleteCompaign=async(id)=>{
       try {
         const token = localStorage.getItem("token")
-      const response = await axios.delete(`http://localhost:3000/api/${id}`,{
+      const response = await axios.delete(`https://email-compaign.onrender.com/api/${id}`,{
         headers : {
           Authorization : `Bearer ${token}`
         }

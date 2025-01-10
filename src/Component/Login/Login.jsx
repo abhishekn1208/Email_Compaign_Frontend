@@ -26,7 +26,7 @@ const Login = () => {
     }
 
   try {
-    const response = await axios.post("http://localhost:3000/api/login",data)
+    const response = await axios.post("https://email-compaign.onrender.com/api/login",data)
     if(response.status===200){
      localStorage.setItem("token",response.data.token)
      alert(response.data.message)
