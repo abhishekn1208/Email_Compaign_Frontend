@@ -1,21 +1,59 @@
 import { Button, FormControl, FormLabel, Heading, Input, Textarea } from '@chakra-ui/react'
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
+import { useNavigate, useParams } from 'react-router-dom'
 
 
 const EmailComaign = () => {
+  const navigate = useNavigate()
+  const { compaignId } = useParams() 
+  const [isEdit, setIsEdit] = useState(false)
     const subRef = useRef(null)
     const contRef = useRef(null)
     const recRef = useRef(null)
     const scheduleRef = useRef(null)
-    const [compaignId, setCompaignId] = useState(null)
+    const nameRef = useRef(null)
+    const descRef = useRef(null)
 
+
+
+    // console.log(compaignId)
+
+    const fetchupdatedContent=async(compaignId)=>{
+      console.log(compaignId)
+      try {
+        const response = await axios.get(`http://localhost:3000/api/${compaignId}`)
+        console.log(response)
+        if(response.status===200){
+          const compaign = response.data
+          console.log(compaign)
+          subRef.current.value = compaign.subject
+          contRef.current.value = compaign.emailContent
+          recRef.current.value = compaign.recipients.join(", ")
+          scheduleRef.current.value = compaign.scheduledAt
+          nameRef.current.value = compaign.name
+          descRef.current.value = compaign.description
+        }
+       } catch (error) {
+        console.log(error.response.data.message)
+       }
+     }
+
+useEffect(()=>{
+  if(compaignId){
+    setIsEdit(true)
+    
+  
+   fetchupdatedContent(compaignId)
+  }
+  
+},[compaignId])
 
     const handleSubmit=async(e)=>{
         e.preventDefault()
 
         const token = localStorage.getItem("token")
-
+    
         const data = {
             subject : subRef.current.value,
             emailContent : contRef.current.value,
@@ -23,10 +61,26 @@ const EmailComaign = () => {
             scheduledAt : scheduleRef.current.value
         }   
 
-        const response = await axios.post("https://email-compaign.onrender.com/api/create",data)
+        let response;
+        if(isEdit){
+          response = await axios.patch(`http://localhost:3000/api/${compaignId}`,data,{
+            headers : {
+              Authorization : `Bearer ${token}`
+            }
+          })
+       
+        }else{
+           response = await axios.post("https://email-compaign.onrender.com/api/create",data,{
+            headers : {
+              Authorization : `Bearer ${token}`
+            }
+           })
+        }
+
+       
        if(response.status===200){
-        alert("Compaign Created Successfully")
-        setCompaignId(response.data)
+        alert(isEdit ? "Compaign updated successfully" :"Compaign Created Successfully")
+        navigate("/compaign")
        }
     }
 
@@ -36,6 +90,24 @@ const EmailComaign = () => {
     <div style={{padding:'10px 15px'}}>
         <Heading textAlign="center">Create Compaign</Heading>
       <form onSubmit={handleSubmit}>
+      <FormControl>
+        <FormLabel>Name</FormLabel>
+        <Input
+          type="text"
+          name="name"
+        ref={nameRef}
+          required
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Description</FormLabel>
+        <Input
+          type="text"
+          name="desc"
+        ref={descRef}
+          required
+        />
+      </FormControl>
       <FormControl>
         <FormLabel>Subject</FormLabel>
         <Input
@@ -71,7 +143,7 @@ const EmailComaign = () => {
         />
       </FormControl>
       <Button mt={4} colorScheme="teal" type="submit">
-        Create Compaign
+      {isEdit ? "Update Campaign" : "Create Campaign"}
       </Button>
     </form>
 
