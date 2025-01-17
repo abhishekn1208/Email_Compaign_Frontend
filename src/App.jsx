@@ -7,21 +7,22 @@ import CompaignPage from './Component/CompaignPage'
 import Navbar from './Component/Navbar/Navbar'
 import Signup from './Component/Signup/Signup'
 import Login from './Component/Login/Login'
+import PrivateRoute from './Component/Privateroute/PrivateRoute'
 
 function App() {
-
+ const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   return (
     <>
-    <Navbar/>
+    <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>
 
      <Routes>
       <Route path="/" element={<Home/>}/>
-      <Route path="/create" element={<EmailComaign/>}/>
-      <Route path="/create/:compaignId" element={<EmailComaign/>}/>
-      <Route path="/compaign" element={<CompaignPage/>}/>
+      <Route path="/create" element={<PrivateRoute isAuthenticated={isAuthenticated}><EmailComaign/></PrivateRoute>}/>
+      <Route path="/create/:compaignId" element={<PrivateRoute isAuthenticated={isAuthenticated}><EmailComaign/></PrivateRoute>}/>
+      <Route path="/compaign" element={<CompaignPage isAuthenticated={isAuthenticated}/>}/>
       <Route path='/signup' element={<Signup/>}/>
-      <Route path='/login' element={<Login/>}/>
+      <Route path='/login' element={<Login setIsAuthenticated={setIsAuthenticated}/>}/>
       
      </Routes>
     </>

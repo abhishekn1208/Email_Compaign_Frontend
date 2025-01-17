@@ -63,7 +63,8 @@ useEffect(()=>{
             scheduledAt : scheduleRef.current.value || null
         }   
 
-        let response;
+        try {
+          let response;
         if(isEdit){
           response = await axios.patch(`https://email-compaign.onrender.com/api/${compaignId}`,data,{
             headers : {
@@ -83,11 +84,15 @@ useEffect(()=>{
 
        
        if(response.status===200){
+        console.log(response.data)
         alert(isEdit ? "Compaign updated successfully" : "Compaign Created Successfully")
         navigate("/compaign")
-       }else{
-        console.log(response)
-       }
+       }else {
+        alert('Something went wrong while saving the campaign');
+      }
+        } catch (error) {
+          alert(error.response.data.message)
+        }
     }
 
   

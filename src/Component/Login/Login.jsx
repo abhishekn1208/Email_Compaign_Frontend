@@ -10,7 +10,7 @@ import {
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = ({setIsAuthenticated}) => {
   const navigate = useNavigate()
   const userRef = useRef(null)
   const passRef = useRef(null)
@@ -29,6 +29,7 @@ const Login = () => {
     const response = await axios.post("https://email-compaign.onrender.com/api/login",data)
     if(response.status===200){
      localStorage.setItem("token",response.data.token)
+     setIsAuthenticated(true)
      alert(response.data.message)
      navigate("/compaign")
     }
