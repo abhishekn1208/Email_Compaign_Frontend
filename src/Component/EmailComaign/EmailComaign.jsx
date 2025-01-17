@@ -55,10 +55,12 @@ useEffect(()=>{
         const token = localStorage.getItem("token")
     
         const data = {
+            name :  nameRef.current.value,
+            description : descRef.current.value,
             subject : subRef.current.value,
             emailContent : contRef.current.value,
             recipients : recRef.current.value,
-            scheduledAt : scheduleRef.current.value
+            scheduledAt : scheduleRef.current.value || null
         }   
 
         let response;
@@ -70,17 +72,21 @@ useEffect(()=>{
           })
        
         }else{
+          console.log(data)
            response = await axios.post("https://email-compaign.onrender.com/api/create",data,{
             headers : {
               Authorization : `Bearer ${token}`
             }
            })
+          
         }
 
        
        if(response.status===200){
-        alert(isEdit ? "Compaign updated successfully" :"Compaign Created Successfully")
+        alert(isEdit ? "Compaign updated successfully" : "Compaign Created Successfully")
         navigate("/compaign")
+       }else{
+        console.log(response)
        }
     }
 

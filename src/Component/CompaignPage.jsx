@@ -8,7 +8,9 @@ const CompaignPage = () => {
     const [data, setData] = useState([])
     const fetchCompaign=async()=>{
         const response = await axios.get("https://email-compaign.onrender.com/api/")
+        console.log(response)
         setData(response.data)
+        
       
 
     }

@@ -12,6 +12,7 @@ const Navbar = () => {
     setIsAuthenticated(true)
     console.log(token)
   }
+  console.log(isAuthenticated)
 
   },[])
   const handlelogout=()=>{
